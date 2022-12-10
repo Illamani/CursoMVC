@@ -37,19 +37,20 @@ namespace CursoIndio
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+		    if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseStaticFiles();
-            //app.UseMvcWithDefaultRoute();
+            else
+            {
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+            }
+			//app.UseDeveloperExceptionPage();
+			app.UseStaticFiles();
+
             app.UseMvc(routes =>
             {
-                routes.MapRoute("default","{controller=Home}/{action}/{id?}");
-            });
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hola Mundo");
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

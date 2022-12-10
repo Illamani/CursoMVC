@@ -11,10 +11,10 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "MyKey": "Value from EnviromentVariable"
-      }
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "MyKey": "Value from EnviromentVariable"
+        }
     },
     "CursoIndio": {
       "commandName": "Project",

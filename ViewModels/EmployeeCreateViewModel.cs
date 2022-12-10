@@ -1,12 +1,13 @@
 ﻿using CursoIndio.Controllers.Models;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace CursoIndio.ViewModels
 {
     public class EmployeeCreateViewModel
-    {   
+    {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
@@ -18,6 +19,6 @@ namespace CursoIndio.ViewModels
         public string Email { get; set; }
         [Required]
         public Dept? Department { get; set; }
-        public IFormFile Photo { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }

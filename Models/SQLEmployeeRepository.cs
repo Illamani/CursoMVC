@@ -1,4 +1,5 @@
 ﻿using CursoIndio.Controllers.Models;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace CursoIndio.Models
@@ -6,10 +7,11 @@ namespace CursoIndio.Models
     public class SQLEmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext _context;
-
-        public SQLEmployeeRepository(AppDbContext context)
+        private readonly ILogger logger;
+        public SQLEmployeeRepository(AppDbContext context, ILogger<SQLEmployeeRepository> logger)
         {
             _context = context;
+            this.logger = logger;
         }
         public Employee Add(Employee employee)
         {
@@ -36,6 +38,13 @@ namespace CursoIndio.Models
 
         public Employee GetEmployee(int id)
         {
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
             return _context.employees.Find(id);
         }
 

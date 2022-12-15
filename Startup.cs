@@ -43,6 +43,7 @@ namespace CursoIndio
             }
             else
             {
+                app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
 			//app.UseDeveloperExceptionPage();

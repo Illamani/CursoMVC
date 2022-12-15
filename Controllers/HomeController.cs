@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 
@@ -13,12 +14,15 @@ namespace CursoIndio.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IHostingEnvironment _hostingEnvironment;
+		private readonly ILogger logger;
 
         public HomeController(IEmployeeRepository employeeRepository,
-                              IHostingEnvironment hostingEnvironment)
+                              IHostingEnvironment hostingEnvironment,
+							  ILogger<HomeController> logger)
         {
             _employeeRepository = employeeRepository;
             _hostingEnvironment = hostingEnvironment;
+			this.logger = logger;
         }
         [Route("")]
         public ViewResult Index()
@@ -28,7 +32,14 @@ namespace CursoIndio.Controllers
         }
         public ViewResult Details(int? id)
         {
-			Employee employee = _employeeRepository.GetEmployee(id.Value);
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
+            Employee employee = _employeeRepository.GetEmployee(id.Value);
 
 			if(employee == null)
 			{

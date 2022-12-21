@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CursoIndio.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace CursoIndio.ViewModels
@@ -7,6 +9,8 @@ namespace CursoIndio.ViewModels
     {
         [Required]
         [EmailAddress]
+        [Remote(action: "IsEmailInUse",controller:"Account")]
+        [ValidEmailDomain(allowedDomain:"gmail.com",ErrorMessage ="Email Domain Must Be gmail.com")]
         public string Email { get; set; }
 
         [Required]
@@ -18,5 +22,6 @@ namespace CursoIndio.ViewModels
         [Compare("Password",
             ErrorMessage = "Password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        public string City { get; set; }
     }
 }

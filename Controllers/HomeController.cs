@@ -1,5 +1,6 @@
 ﻿using CursoIndio.Controllers.Models;
 using CursoIndio.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using System.IO;
 
 namespace CursoIndio.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -24,12 +26,14 @@ namespace CursoIndio.Controllers
             _hostingEnvironment = hostingEnvironment;
 			this.logger = logger;
         }
+        [AllowAnonymous]
         [Route("")]
         public ViewResult Index()
         {
             var model = _employeeRepository.GetAllEmployee();
             return View(model);
         }
+        [AllowAnonymous]
         public ViewResult Details(int? id)
         {
             logger.LogTrace("Trace Log");
@@ -59,7 +63,6 @@ namespace CursoIndio.Controllers
         {
             return View();
         }
-
 		[HttpPost]
 		public IActionResult Create(EmployeeCreateViewModel model)
 		{

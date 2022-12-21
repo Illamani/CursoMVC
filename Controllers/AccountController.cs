@@ -1,4 +1,6 @@
-﻿using CursoIndio.ViewModels;
+﻿using CursoIndio.Models;
+using CursoIndio.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,9 +9,9 @@ namespace CursoIndio.Controllers
 {
     public class AccountController : Controller
     {
-        public UserManager<IdentityUser> UserManager;
-        public SignInManager<IdentityUser> SignInManager;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UserManager<ApplicationUser> UserManager;
+        public SignInManager<ApplicationUser> SignInManager;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -22,17 +24,39 @@ namespace CursoIndio.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
+        [AcceptVerbs("Get","Post")]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await UserManager.FindByEmailAsync(email);
+            if(user is null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in use");
+            }
+        }
+
         [HttpPost]
+        [AllowAnonymous]
         public async  Task<IActionResult> Register(RegisterViewModel model)
         {
             if(ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email,Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    City= model.City,
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
 
                 if(result.Succeeded)
@@ -48,13 +72,15 @@ namespace CursoIndio.Controllers
             return View(model);
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel model,string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +88,10 @@ namespace CursoIndio.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
                     return RedirectToAction("index", "home");
                 }
                 ModelState.AddModelError("","Invalid Login Attempt" );

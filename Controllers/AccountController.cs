@@ -61,6 +61,10 @@ namespace CursoIndio.Controllers
 
                 if(result.Succeeded)
                 {
+                    if(SignInManager.IsSignedIn(User) && User.IsInRole("ADMIN"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
                     await SignInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
@@ -98,6 +102,12 @@ namespace CursoIndio.Controllers
             }
 
             return View(model);
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

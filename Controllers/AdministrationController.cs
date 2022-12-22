@@ -1,5 +1,6 @@
 ﻿using CursoIndio.Models;
 using CursoIndio.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace CursoIndio.Controllers
 {
+    //[Authorize(Roles ="Captain")]
+    [Authorize(Roles ="ADMIN")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -19,6 +22,14 @@ namespace CursoIndio.Controllers
             _roleManager = roleManager;
             this.userManager = userManager;
         }
+
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users;
+            return View(users);
+        }
+
         [HttpGet]
         public IActionResult CreateRole()
         {
@@ -138,7 +149,7 @@ namespace CursoIndio.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
-        {
+                    {
             var role = await _roleManager.FindByIdAsync(roleId);
 
             if (role == null)
